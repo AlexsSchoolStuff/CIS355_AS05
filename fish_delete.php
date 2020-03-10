@@ -1,5 +1,5 @@
 <?php 
-	require 'database.php';
+	require '../../database.php';
 	$id = 0;
 	
 	if ( !empty($_GET['id'])) {
@@ -13,11 +13,11 @@
 		// delete data
 		$pdo = Database::connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$sql = "DELETE FROM events  WHERE id = ?";
+		$sql = "DELETE FROM AS05_fish  WHERE fishID = ?";
 		$q = $pdo->prepare($sql);
 		$q->execute(array($id));
 		Database::disconnect();
-		header("Location: events.php");
+		header("Location: fish.php");
 		
 	} 
 ?>
@@ -35,15 +35,15 @@
     
     			<div class="span10 offset1">
     				<div class="row">
-		    			<h3>Delete an Event</h3>
+		    			<h3>Delete a Fish</h3>
 		    		</div>
 		    		
-	    			<form class="form-horizontal" action="event_delete.php" method="post">
+	    			<form class="form-horizontal" action="fish_delete.php" method="post">
 	    			  <input type="hidden" name="id" value="<?php echo $id;?>"/>
 					  <p class="alert alert-error">Are you sure to delete ?</p>
 					  <div class="form-actions">
 						  <button type="submit" class="btn btn-danger">Yes</button>
-						  <a class="btn" href="events.php">No</a>
+						  <a class="btn" href="fish.php">No</a>
 						</div>
 					</form>
 				</div>

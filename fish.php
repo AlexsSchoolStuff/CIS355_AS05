@@ -9,40 +9,38 @@
 <body>
     <div class="container">
     		<div class="row">
-    			<h3>Events File</h3>
+    			<h3>Fish File</h3>
     		</div>
 			<div class="row">
 				<p>
-					<a href="event_create.php" class="btn btn-success">Create</a>
+					<a href="fish_create.php" class="btn btn-success">Add</a>
 				</p>
 				
 				<table class="table table-striped table-bordered">
 		              <thead>
 		                <tr>
-		                  <th>Date</th>
-		                  <th>Time</th>
-		                  <th>Location</th>
-		                  <th>Description</th>
-						  <th>Action</th>
+		                  <th>Species</th>
+		                  <th>Weight</th>
+		                  <th>Length</th>
 		                </tr>
 		              </thead>
 		              <tbody>
 		              <?php 
-					   require 'database.php';
+					   require '../../database.php';
+					   
 					   $pdo = Database::connect();
-					   $sql = 'SELECT * FROM events ORDER BY id DESC';
+					   $sql = 'SELECT * FROM AS05_fish ORDER BY fishID DESC';
 	 				   foreach ($pdo->query($sql) as $row) {
 						   		echo '<tr>';
-							   	echo '<td>'. $row['event_date'] . '</td>';
-							   	echo '<td>'. $row['event_time'] . '</td>';
-							   	echo '<td>'. $row['event_location'] . '</td>';
-								echo '<td>'. $row['event_description'] . '</td>';
+							   	echo '<td>'. $row['fishSpecies'] . '</td>';
+							   	echo '<td>'. $row['fishWeight'] . '</td>';
+							   	echo '<td>'. $row['fishLength'] . '</td>';
 							   	echo '<td width=250>';
-							   	echo '<a class="btn" href="event_read.php?id='.$row['id'].'">Read</a>';
+							   	echo '<a class="btn" href="fish_read.php?id='.$row['fishID'].'">Read</a>';
 							   	echo '&nbsp;';
-							   	echo '<a class="btn btn-success" href="event_update.php?id='.$row['id'].'">Update</a>';
+							   	echo '<a class="btn btn-success" href="fish_update.php?id='.$row['fishID'].'">Update</a>';
 							   	echo '&nbsp;';
-							   	echo '<a class="btn btn-danger" href="event_delete.php?id='.$row['id'].'">Delete</a>';
+							   	echo '<a class="btn btn-danger" href="fish_delete.php?id='.$row['fishID'].'">Delete</a>';
 							   	echo '</td>';
 							   	echo '</tr>';
 					   }

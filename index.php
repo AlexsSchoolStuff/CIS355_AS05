@@ -9,10 +9,10 @@
 <body>
     <div>
 		<p>
-			<a href = "customers.php">customers.php</a><br>			
-			<a href = "events.php">events.php</a><br>
-			<a href = "assignments.php">assignments.php</a><br>
-			<a href = "https://github.com/awbuckst11181999/CIS355_CRUD1">Github for As03</a><br>
+			<a href = "person.php">person.php</a><br>			
+			<a href = "fish.php">fish.php</a><br>
+			<a href = "catch.php">catch.php</a><br>
+			<a href = "https://github.com/awbuckst11181999/CIS355_AS05">Github</a><br>
 			
 
     	</div>
