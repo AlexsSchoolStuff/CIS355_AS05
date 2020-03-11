@@ -1,16 +1,16 @@
 <?php 
-	require 'database.php';
+	require '../../database.php';
 	$id = null;
 	if ( !empty($_GET['id'])) {
 		$id = $_REQUEST['id'];
 	}
 	
 	if ( null==$id ) {
-		header("Location: index.php");
+		header("Location: person.php");
 	} else {
 		$pdo = Database::connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$sql = "SELECT * FROM customers where id = ?";
+		$sql = "SELECT * FROM AS05_person where personID = ?";
 		$q = $pdo->prepare($sql);
 		$q->execute(array($id));
 		$data = $q->fetch(PDO::FETCH_ASSOC);
@@ -31,7 +31,7 @@
     
     			<div class="span10 offset1">
     				<div class="row">
-		    			<h3>Read a Customer</h3>
+		    			<h3>User Info:</h3>
 		    		</div>
 		    		
 	    			<div class="form-horizontal" >
@@ -39,28 +39,21 @@
 					    <label class="control-label">Name</label>
 					    <div class="controls">
 						    <label class="checkbox">
-						     	<?php echo $data['name'];?>
+						     	<?php echo $data['personName'];?>
 						    </label>
 					    </div>
 					  </div>
 					  <div class="control-group">
-					    <label class="control-label">Email Address</label>
+					    <label class="control-label">Caught Fish</label>
 					    <div class="controls">
 					      	<label class="checkbox">
-						     	<?php echo $data['email'];?>
+						     	<?php echo $data['personCatchNum'];?>
 						    </label>
 					    </div>
 					  </div>
-					  <div class="control-group">
-					    <label class="control-label">Mobile Number</label>
-					    <div class="controls">
-					      	<label class="checkbox">
-						     	<?php echo $data['mobile'];?>
-						    </label>
-					    </div>
-					  </div>
+					  
 					    <div class="form-actions">
-						  <a class="btn" href="index.php">Back</a>
+						  <a class="btn" href="person.php">Back</a>
 					   </div>
 					
 					 

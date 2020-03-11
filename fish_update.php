@@ -6,7 +6,6 @@
 	if ( !empty($_GET['id'])) {
 		$id = $_REQUEST['id'];
 	}
-	echo $id;
 	
 	if ( null==$id ) {
 		header("Location: fish.php");
