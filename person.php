@@ -1,3 +1,9 @@
+<?php
+session_start();
+echo $_SESSION['personTitle'];
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,15 +18,19 @@
     			<h3>List of Users</h3>
     		</div>
 			<div class="row">
-				<p>
+			<?php
+			if ($_SESSION['personTitle']==1){
+			echo '<p>
 					<a href="person_create.php" class="btn btn-success">Add Person</a>
-				</p>
+				</p>';
+			}
+			?>
+				
 				
 				<table class="table table-striped table-bordered">
 		              <thead>
 		                <tr>
 		                  <th>Name</th>
-		                  <th>Caught Fish</th>
 		                </tr>
 		              </thead>
 		              <tbody>
@@ -31,7 +41,8 @@
 	 				   foreach ($pdo->query($sql) as $row) {
 						   		echo '<tr>';
 							   	echo '<td>'. $row['personName'] . '</td>';
-							   	echo '<td>'. $row['personCatchNum'] . '</td>';
+								if ($_SESSION['personTitle']==1){
+								
 							   	echo '<td width=250>';
 							   	echo '<a class="btn" href="person_read.php?id='.$row['personID'].'">Read</a>';
 							   	echo '&nbsp;';
@@ -39,6 +50,7 @@
 							   	echo '&nbsp;';
 							   	echo '<a class="btn btn-danger" href="person_delete.php?id='.$row['personID'].'">Delete</a>';
 							   	echo '</td>';
+								}
 							   	echo '</tr>';
 					   }
 					   Database::disconnect();

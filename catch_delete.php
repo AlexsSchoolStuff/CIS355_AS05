@@ -1,5 +1,5 @@
 <?php 
-	require 'database.php';
+	require '../../database.php';
 	$id = 0;
 	
 	if ( !empty($_GET['id'])) {
@@ -13,11 +13,11 @@
 		// delete data
 		$pdo = Database::connect();
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$sql = "DELETE FROM assignments  WHERE id = ?";
+		$sql = "DELETE FROM AS05_catch  WHERE id = ?";
 		$q = $pdo->prepare($sql);
 		$q->execute(array($id));
 		Database::disconnect();
-		header("Location: assignments.php");
+		header("Location: catch.php");
 		
 	} 
 ?>
@@ -35,10 +35,10 @@
     
     			<div class="span10 offset1">
     				<div class="row">
-		    			<h3>Delete an Assignment</h3>
+		    			<h3>Delete a Catch</h3>
 		    		</div>
 		    		
-	    			<form class="form-horizontal" action="assign_delete.php" method="post">
+	    			<form class="form-horizontal" action="catch_delete.php" method="post">
 	    			  <input type="hidden" name="id" value="<?php echo $id;?>"/>
 					  <p class="alert alert-error">Are you sure to delete ?</p>
 					  <div class="form-actions">

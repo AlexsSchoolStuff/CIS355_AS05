@@ -1,51 +1,65 @@
 	<?php 
-	
+	session_start();
 	require '../../database.php';
+			$valid = true;
+			$selectedPerson = $_POST["personName"];
+			$selectedFish = $_POST["fishName"];
+			$selectedWeight = $_POST["fishWeight"];
+			$selectedLength = $_POST["fishLength"];
+			if ($selectedPerson == "--Select Person--"){
+				$valid = false;
+			}
+			if ($selectedFish == "--Select Fish--"){
+				$valid = false;
+			}
+			if ($selectedPerson == null){
+				$valid = false;
+			}
+			if ($selectedFish == null){
+				$valid = false;
+			}
+			
+			
 
-	if ( !empty($_POST)) {
-		// keep track validation errors
-		$personError = null;
-		$eventError = null;
-		
-		// keep track post values
-		$personID = $_POST['assign_person_id'];
-		$eventID = $_POST['assign_event_id'];
-		
-		// validate input
-		
-		//TODO: Make each input a drop down that shows which people and events exist
-		
-		$valid = true;
-		if (empty($personID)) {
-			$personError = "Please enter Person's ID";
-			$valid = false;
-		}
-			else if (!is_numeric($personID)){
-				$personError = 'Please enter a number';
-				$valid = false;
-		}
-		
-		
-		if (empty($eventID)) {
-			$eventError = 'Please enter event ID';
-			$valid = false;
-		}
-		else if (!is_numeric($eventID)){
-				$eventError = 'Please enter a number';
-				$valid = false;
-		}
-		
-		// insert data
-		if ($valid) {
 			$pdo = Database::connect();
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$sql = "INSERT INTO assignments (assign_person_id, assign_event_id) values(?, ?)";
+			$sql = "SELECT * FROM AS05_fish";
 			$q = $pdo->prepare($sql);
-			$q->execute(array($personID, $eventID));
+			$q->execute();
+			$results = $q->fetchAll();
+						
+			
+			if ($valid){	
+			
+			
+			$sql5 = "SELECT fishID from AS05_fish WHERE fishSpecies = '" . $selectedFish . "'";
+			$q5 = $pdo->prepare($sql5);
+			$q5->execute();
+			$fishID = $q5->fetchAll();
+			
+			$sql6 = "SELECT fishID from AS05_fish WHERE fishWeight = '" . $selectedWeight . "'";
+			$q6 = $pdo->prepare($sql6);
+			$q6->execute();
+			$fishWeights = $q6->fetchAll();
+			
+			
+			
+			
+			
+			
+			
+			
+			$sql3 = "INSERT INTO AS05_catch (catchPersonID, catchFishID) values(?, ?)";
+			$q3 = $pdo->prepare($sql3);
+			
+		
+			$q3->execute(array($_SESSION['personID'],$fishID[0][0]));
 			Database::disconnect();
-			header("Location: assignments.php");
-		}
-	}
+			header("Location: catch.php");
+			}
+			var_dump($results);
+			echo $selectedFish;
+			
 ?>
 
 
@@ -62,32 +76,50 @@
     
     			<div class="span10 offset1">
     				<div class="row">
-		    			<h3>Create an Assignment</h3>
+		    			<h3>Create a Catch</h3>
 		    		</div>
     		
-	    			<form class="form-horizontal" action="assign_create.php" method="post">
-					  <div class="control-group <?php echo !empty($personError)?'error':'';?>">
-					    <label class="control-label">Person ID</label>
-					    <div class="controls">
-					      	<input name="assign_person_id" type="text"  placeholder="Person ID" value="<?php echo !empty($personID)?$personID:'';?>">
-					      	<?php if (!empty($personError)): ?>
-					      		<span class="help-inline"><?php echo $personError	;?></span>
-					      	<?php endif; ?>
-					    </div>
-					  </div>
-					  <div class="control-group <?php echo !empty($eventError)?'error':'';?>">
-					    <label class="control-label">Event ID</label>
-					    <div class="controls">
-					      	<input name="assign_event_id" type="text" placeholder="Event ID" value="<?php echo !empty($eventID)?$eventID:'';?>">
-					      	<?php if (!empty($eventError)): ?>
-					      		<span class="help-inline"><?php echo $eventError;?></span>
-					      	<?php endif;?>
-					    </div>
-					  </div>
+	    			<form class="form-horizontal" action="catch_create.php" method="post">
+				
+							<select name = "fishName"  onchange = "this.form.submit()">
+							<option>--Select Fish--</option>
+								<?php foreach ($results as $output) { ?>
+								<option><?php echo $output["fishSpecies"];
+											  
+								?> </option>
+								<?php }?>
+							</select>
+							
+							
+							
+							<select name = "fishWeight">
+							<option>--Select Weight--</option>
+								<?php foreach ($results as $output) { 
+								
+									
+								
+								if (strcmp($output['fishSpecies'],$selectedFish)==0){
+									echo "<option>";
+										echo $output['fishWeight'];
+										echo "</option>";
+								}							
+								
+							}?>
+							</select>
+							
+						<?php
+						?>
+						
+						
+						
+						
+						
+			
 
 					  <div class="form-actions">
+						  <a class = "btn btn-info" href = "fish_create.php">Add New Fish</a>
 						  <button type="submit" class="btn btn-success">Create</button>
-						  <a class="btn" href="assignments.php">Back</a>
+						  <a class="btn" href="catch.php">Back</a>
 						</div>
 					</form>
 				</div>

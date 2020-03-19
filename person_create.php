@@ -6,11 +6,13 @@
 		// keep track validation errors
 		$nameError = null;
 		$numError = null;
+		$passwordError = null;
 		
 		
 		// keep track post values
 		$name = $_POST['personName'];
-		$num = $_POST['personCatchNum'];
+		$password = $_POST['personPassword'];
+		$passwordhash = MD5($password);
 		
 		
 		// validate input
@@ -19,21 +21,25 @@
 			$nameError = 'Please enter Name';
 			$valid = false;
 		}
-
-		if (!is_numeric($num)) {
-			$numError = 'Please enter number of fish caught';
+		
+		
+		if (empty($password)) {
+			$passwordError = 'Please enter a password';
 			$valid = false;
 		}
+		
+
+
 		
 		// insert data
 		if ($valid) {
 			$pdo = Database::connect();
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$sql = "INSERT INTO AS05_person (personName, personCatchNum) values(?, ?)";
+			$sql = "INSERT INTO AS05_person (personName, personPassword, personTitle) values(?, ?, ?)";
 			$q = $pdo->prepare($sql);
-			$q->execute(array($name,$num));
+			$q->execute(array($name,$passwordhash, 0));
 			Database::disconnect();
-			header("Location: person.php");
+			header("Location: login.php");
 		}
 	}
 ?>
@@ -65,19 +71,20 @@
 					      	<?php endif; ?>
 					    </div>
 					  </div>
-					  <div class="control-group <?php echo !empty($numError)?'error':'';?>">
-					    <label class="control-label">Caught Fish</label>
+					  
+					  <div class="control-group <?php echo !empty($passwordError)?'error':'';?>">
+					    <label class="control-label">Password</label>
 					    <div class="controls">
-					      	<input name="personCatchNum" type="text" placeholder="Caught Fish" value="<?php echo !empty($num)?$num:'';?>">
-					      	<?php if (!empty($numError)): ?>
-					      		<span class="help-inline"><?php echo $numError;?></span>
+					      	<input name="personPassword" type="password" placeholder="Password" value="<?php echo !empty($password)?$password:'';?>">
+					      	<?php if (!empty($passwordError)): ?>
+					      		<span class="help-inline"><?php echo $passwordError;?></span>
 					      	<?php endif;?>
 					    </div>
 					  </div>
 					 
 					  <div class="form-actions">
 						  <button type="submit" class="btn btn-success">Add</button>
-						  <a class="btn" href="person.php">Back</a>
+						  <button type="button" class = "btn" onclick="history.back();">Back</button>
 						</div>
 					</form>
 				</div>

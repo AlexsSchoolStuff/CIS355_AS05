@@ -38,7 +38,7 @@
 			$sql = "INSERT INTO AS05_fish (fishSpecies, fishWeight, fishLength) VALUES(?, ?, ?)";
 			$q = $pdo->prepare($sql)->execute(array($species,$weight,$length));
 			Database::disconnect();
-			header("Location: fish.php");
+			header("Location: catch_create.php");
 		}
 
 	}
@@ -95,7 +95,8 @@
 
 					  <div class="form-actions">
 						  <button type="submit" class="btn btn-success">Add</button>
-						  <a class="btn" href="fish.php">Back</a>
+						  <button type="button" class = "btn" onclick="history.back();">Back</button>
+						  
 						</div>
 					</form>
 				</div>
