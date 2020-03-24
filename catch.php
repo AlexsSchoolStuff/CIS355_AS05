@@ -1,5 +1,9 @@
 <?php
 session_start();
+if( !isset($_SESSION["personID"]) ){
+    header("location:login.php");
+	exit();
+}
 ?>
 
 

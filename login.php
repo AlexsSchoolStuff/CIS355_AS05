@@ -3,7 +3,6 @@
 
 
 session_start(); 
-
 require '../../database.php';
 
 if ( !empty($_POST)) { 
@@ -23,8 +22,7 @@ if ( !empty($_POST)) {
 
 	$q->execute(array($username,$passwordhash));
 	$data = $q->fetchAll();
-	var_dump($data);
-	var_dump($_SESSION);
+
 	
 	if(!empty($data)) { 
 		$_SESSION['personID'] = $data[0]['personID'];

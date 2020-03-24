@@ -1,8 +1,12 @@
 	<?php 
 	session_start();
+	if( !isset($_SESSION["personID"]) ){
+    header("location:login.php");
+	exit();
+}
 	require '../../database.php';
 			$valid = true;
-			$selectedPerson = $_POST["personName"];
+			$selectedPerson = $_SESSION["personID"];
 			$selectedFish = $_POST["fishName"];
 			$selectedWeight = $_POST["fishWeight"];
 			$selectedLength = $_POST["fishLength"];
@@ -18,7 +22,18 @@
 			if ($selectedFish == null){
 				$valid = false;
 			}
-			
+			if ($selectedWeight == "--Select Weight--"){
+				$valid = false;
+			}
+			if ($selectedWeight == null){
+				$valid = false;
+			}	
+			if ($selectedLength == "--Select Length--"){
+				$valid = false;
+			}
+			if ($selectedLength == null){
+				$valid = false;
+			}
 			
 
 			$pdo = Database::connect();
@@ -30,12 +45,13 @@
 						
 			
 			if ($valid){	
+			echo "Got here1";
 			
-			
-			$sql5 = "SELECT fishID from AS05_fish WHERE fishSpecies = '" . $selectedFish . "'";
+			$sql5 = 'SELECT fishID from AS05_fish WHERE fishSpecies ="' . $selectedFish. '"';
 			$q5 = $pdo->prepare($sql5);
 			$q5->execute();
 			$fishID = $q5->fetchAll();
+			var_dump($fishID);
 			
 			$sql6 = "SELECT fishID from AS05_fish WHERE fishWeight = '" . $selectedWeight . "'";
 			$q6 = $pdo->prepare($sql6);
@@ -57,8 +73,9 @@
 			Database::disconnect();
 			header("Location: catch.php");
 			}
-			var_dump($results);
+
 			echo $selectedFish;
+			echo $selectedWeight;
 			
 ?>
 
@@ -82,6 +99,11 @@
 	    			<form class="form-horizontal" action="catch_create.php" method="post">
 				
 							<select name = "fishName"  onchange = "this.form.submit()">
+							<?php 
+							if ($selectedFish != ""){
+							echo "<option>".$selectedFish."</option>";
+							}
+							?>
 							<option>--Select Fish--</option>
 								<?php foreach ($results as $output) { ?>
 								<option><?php echo $output["fishSpecies"];
@@ -92,7 +114,12 @@
 							
 							
 							
-							<select name = "fishWeight">
+							<select name = "fishWeight" onchange = "this.form.submit()">
+							<?php 
+							if ($selectedWeight != "--Select Weight--" AND $selectedWeight != null){
+							echo "<option>".$selectedWeight."</option>";
+							}
+							?>
 							<option>--Select Weight--</option>
 								<?php foreach ($results as $output) { 
 								
@@ -101,6 +128,21 @@
 								if (strcmp($output['fishSpecies'],$selectedFish)==0){
 									echo "<option>";
 										echo $output['fishWeight'];
+										echo "</option>";
+								}							
+								
+							}?>
+							</select>
+							
+							<select name = "fishLength">
+							<option>--Select Length--</option>
+								<?php foreach ($results as $output) { 
+								
+									
+								
+								if (strcmp($output['fishSpecies'],$selectedFish)==0){
+									echo "<option>";
+										echo $output['fishLength'];
 										echo "</option>";
 								}							
 								

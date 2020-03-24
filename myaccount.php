@@ -1,5 +1,9 @@
 <?php 
 session_start();
+if( !isset($_SESSION["personID"]) ){
+    header("location:login.php");
+	exit();
+}
 	require '../../database.php';
 	$id = null;
 	if ( !empty($_GET['id'])) {
@@ -13,6 +17,20 @@ session_start();
 		$q->execute(array($_SESSION['personID']));
 		$data = $q->fetch(PDO::FETCH_ASSOC);
 		Database::disconnect();
+		
+	   $pdo = Database::connect();
+	   
+	   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$sql = "SELECT * FROM AS05_fish";
+		$q = $pdo->prepare($sql);
+		$q->execute();
+		$results = $q->fetchAll();
+		
+		$sql2 = "SELECT * FROM AS05_person";
+		$q2 = $pdo->prepare($sql2);
+		$q2->execute();
+		$results2 = $q2->fetchAll();
+		//var_dump($results2);
 	
 ?>
 
@@ -54,6 +72,65 @@ session_start();
 						    </label>
 					    </div>
 					  </div>
+					  
+					  <div>
+					  <table class="table table-striped table-bordered">
+					  <thead>
+		                <tr>
+		                  <th>Person</th>
+		                  <th>Fish</th>
+		                  <th>Action</th>
+		                </tr>
+		              </thead>
+		              <tbody>	
+					  <?php 
+					  
+					   
+					   
+					   
+					   
+					   
+					   
+					   
+					   $sql = 'SELECT * FROM AS05_catch WHERE catchPersonID='.$_SESSION['personID'];
+						foreach ($pdo->query($sql) as $row) {
+						   		echo '<tr>';
+								
+								foreach ($results2 as $item){
+									if ($row['catchPersonID'] == $item["personID"]){
+									echo '<td>'. $item["personName"] . '</td>';
+									}	
+								}
+								foreach ($results as $item){
+										if ($row['catchFishID'] == $item["fishID"]){
+												echo '<td>'. $item["fishSpecies"] . " (" . $item["fishWeight"] . " lbs)" . " (" . $item["fishLength"] . " in)" . '</td>';
+										}
+								}	
+								
+								
+								
+								if ($_SESSION['personTitle']==1 || $row['catchPersonID']== $_SESSION['personID']){
+							   	echo '<td width=250>';
+							   	echo '<a class="btn" href="catch_read.php?id='.$row['id'].'">Read</a>';
+							   	echo '&nbsp;';
+							   	echo '<a class="btn btn-success" href="catch_update.php?id='.$row['id'].'">Update</a>';
+							   	echo '&nbsp;';
+							   	echo '<a class="btn btn-danger" href="catch_delete.php?id='.$row['id'].'">Delete</a>';
+							   	echo '</td>';
+							   	echo '</tr>';
+								}
+					   }
+					   Database::disconnect();
+					  ?>
+					   
+					  
+					  				      </tbody>
+	            </table>
+					  </div>
+					  
+					  
+					  
+					  
 					  
 					    <div class="form-actions">
 						  <button type="button" class = "btn" onclick="history.back();">Back</button>
